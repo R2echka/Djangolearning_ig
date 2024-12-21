@@ -1,0 +1,23 @@
+{% extends 'catalog/base.html' %}
+{% block content %}
+<div class="container">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+        <div class="col">
+            <div class="card shadow-sm">
+                <h4 class="my-0 font-weight-normal">{{ object.title }}</h4>
+                <div class="card-body">
+                    <p> Description: {{ object.text }} </p>
+                    <p class="card-text"> views_counter: {{ object.views }} </p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="btn-group">
+                            <a class="btn btn-outline-primary" href="{% url 'blogs:blog' %}"
+                            role="button">Обратно</a>
+                        </div>
+                        <small class="text-body-secondary"> {{ object.created_at }} </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

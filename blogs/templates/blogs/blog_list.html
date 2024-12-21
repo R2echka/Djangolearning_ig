@@ -1,0 +1,18 @@
+{% extends 'catalog/base.html' %}
+{% block content %}
+<div class="row text-center", style="padding: 5rem;">
+    {% for post in object_list %}
+    <div class="card" style="width: 25rem;">
+        <h4 class="my-0 font-weight-normal">{{ post.title }}</h4>
+        <div class="card-body">
+            <p class="card-text">{{ post.text| truncatechars:100 }}</p>
+            <div class="btn-group">
+                <a class="btn btn-outline-primary" href="{% url 'blogs:update_post' post.pk %}" role="button">Изменить</a>
+                <a class="btn btn-outline-primary" href="{% url 'blogs:post' post.pk %}" role="button">Посмотреть</a>
+                <a class="btn btn-outline-primary" href="{% url 'blogs:delete_post' post.pk %}" role="button">Удалить</a>
+            </div>
+        </div>
+    </div>
+    {%endfor%}
+</div>
+{% endblock %}
