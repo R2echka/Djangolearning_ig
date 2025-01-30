@@ -7,7 +7,7 @@ forbidden = ["казино", "криптовалюта", "крипта", "бир
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['name', 'description', 'img', 'category', 'price', 'created_at']
+        fields = ['name', 'description', 'img', 'category', 'price', 'created_at', 'is_publicated']
     
     def __init__(self, *args, **kwargs):
         super(ProductForm, self).__init__(*args, **kwargs)
@@ -18,6 +18,7 @@ class ProductForm(forms.ModelForm):
         self.fields['category'].widget.attrs.update({'class': 'form-control', 'placeholder': 'К какой категории относится продукт'})
         self.fields['price'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Куда же продукт без цены'})
         self.fields['created_at'].widget.attrs.update({'class': 'form-control', 'placeholder': 'А ещё укажите сегодняшнюю дату'})
+        self.fields['is_publicated'].widget.attrs.update({'class': 'form-control'})
 
 
     def clean_price(self):
@@ -31,3 +32,14 @@ class ProductForm(forms.ModelForm):
         desc = self.cleaned_data.get('description')
         if name and desc and (any(word in name.lower() for word in forbidden) or any(word in desc.lower() for word in forbidden)):
             raise ValidationError('Пожалуйста, не используйте запрещённые слова.')
+        
+
+class ProductModeratorForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = ['is_publicated',]
+    
+    def __init__(self, *args, **kwargs):
+        super(ProductForm, self).__init__(*args, **kwargs)
+
+        self.fields['is_publicated'].widget.attrs.update({'class': 'form-control'})
