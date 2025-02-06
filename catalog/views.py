@@ -1,7 +1,10 @@
 from django.shortcuts import render
 from django.core.exceptions import PermissionDenied
-from .models import Product
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from .models import Product, Category
 from .forms import ProductForm, ProductModeratorForm
+from .services import get_products_by_category, get_cached_products
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import DetailView, ListView, View, CreateView, UpdateView, DeleteView
 
@@ -12,11 +15,15 @@ class ProductView(ListView):
     template_name = "catalog/index.html"
     context_object_name = 'products'
 
+    def get_queryset(self):
+        return get_cached_products()
+
 class ContactView(LoginRequiredMixin, View):
     template_name= "catalog/contacts.html"
     def get(self, request):
         return render(request, "catalog/contacts.html")
 
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class ProductDetail(LoginRequiredMixin, DetailView):
     model = Product
     template_name = 'catalog/product.html'
@@ -50,3 +57,11 @@ class ProductDelete(LoginRequiredMixin, DeleteView):
     model = Product
     template_name = 'catalog/product_delete.html'
     success_url = '/'
+
+class ProductsByCategory(LoginRequiredMixin, ListView):
+    model= Category
+    template_name = "catalog/filtered_products.html"
+    context_object_name = 'filtered_products'
+    
+    def get_queryset(self):
+        return get_products_by_category(self.kwargs.get('name'))
